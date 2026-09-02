@@ -55,9 +55,6 @@ textarea{resize:vertical;min-height:100px}
 .submit-area{text-align:center;margin:8px 0 40px}
 .btn-primary{background:var(--orange);color:#fff;border:none;font-family:'Proxima Nova A Black','Manrope',sans-serif;font-weight:800;font-size:15px;padding:14px 34px;border-radius:9px;cursor:pointer;box-shadow:0 4px 14px rgba(45,45,47,.22)}
 .btn-primary:hover{background:var(--orange-dark)}
-.summary-card{display:none}
-.summary-card.show{display:block}
-.summary-box{background:var(--charcoal);color:#f1f1f0;border-radius:8px;padding:18px;font-size:12.5px;white-space:pre-wrap;line-height:1.6}
 .footer-note{text-align:center;color:rgba(255,255,255,.72);font-size:12px;margin-top:-20px;padding-bottom:35px}
 @media(max-width:600px){.row2{grid-template-columns:1fr}.banner{padding:44px 18px 28px}.banner-inner{padding:0 8px}.banner-content-row{gap:14px;align-items:center}.banner-title{font-size:24px}.coffee-icon{width:78px;height:78px;flex-basis:78px}.banner p{font-size:16px}.wrap{padding:0 14px}.card{padding:22px 18px 24px}}
 
@@ -232,11 +229,6 @@ input[type="radio"] { accent-color: #F26716; }
   <button type="button" class="btn-primary" id="enviar">Enviar</button>
 </div>
 
-<section class="card summary-card" id="resumo_card">
-  <div class="sec-head"><span class="sec-num">✓</span><h2 class="sec-title">Prévia da solicitação</h2></div>
-  <div class="summary-box" id="resumo"></div>
-</section>
-
 </main>
 
 
@@ -317,9 +309,9 @@ document.getElementById("enviar").addEventListener("click", () => {
     `Observações: ${val("observacoes") || "—"}`
   ].join("\n");
 
-  document.getElementById("resumo").textContent = resumo;
-  document.getElementById("resumo_card").classList.add("show");
-  document.getElementById("resumo_card").scrollIntoView({behavior:"smooth", block:"start"});
+  // Mantém o texto completo preparado para a futura integração com o n8n.
+  window.ultimaSolicitacaoCoffee = resumo;
+  alert("Solicitação enviada com sucesso!");
 });
 </script>
 </body>
