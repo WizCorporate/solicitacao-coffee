@@ -243,6 +243,11 @@ function radio(name) {
 function toggle(id, show) {
   document.getElementById(id)?.classList.toggle("hidden", !show);
 }
+function dataPtBr(data) {
+  if (!data) return "";
+  const [ano, mes, dia] = data.split("-");
+  return `${dia}/${mes}/${ano}`;
+}
 
 document.getElementById("tipo_local").addEventListener("change", e => {
   toggle("sao_paulo_box", e.target.value === "Escritório São Paulo");
@@ -259,7 +264,7 @@ document.querySelectorAll('input[name="tv"]').forEach(el => el.addEventListener(
   }
 }));
 
-document.getElementById("enviar").addEventListener("click", () => {
+document.getElementById("enviar").addEventListener("click", async () => {
   const requiredIds = ["solicitante_nome","solicitante_email","solicitante_area","evento_nome","evento_data","participantes","hora_inicio","hora_termino","tipo_local"];
   const missing = requiredIds.filter(id => !val(id));
   if (!radio("sala_reservada")) missing.push("sala_reservada");
@@ -290,7 +295,7 @@ document.getElementById("enviar").addEventListener("click", () => {
     "",
     "SOBRE O EVENTO",
     `Evento: ${val("evento_nome")}`,
-    `Data: ${val("evento_data")}`,
+    `Data: ${dataPtBr(val("evento_data"))}`,
     `Horário: ${val("hora_inicio")} às ${val("hora_termino")}`,
     `Quantidade de participantes: ${val("participantes")}`,
     "",
@@ -309,9 +314,35 @@ document.getElementById("enviar").addEventListener("click", () => {
     `Observações: ${val("observacoes") || "—"}`
   ].join("\n");
 
-  // Mantém o texto completo preparado para a futura integração com o n8n.
-  window.ultimaSolicitacaoCoffee = resumo;
-  alert("Solicitação enviada com sucesso!");
+  const botaoEnviar = document.getElementById("enviar");
+  const textoOriginal = botaoEnviar.textContent;
+  botaoEnviar.disabled = true;
+  botaoEnviar.textContent = "Enviando...";
+
+  try {
+    const resposta = await fetch("https://mktcorporate.app.n8n.cloud/webhook/solicitacao-coffee", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        solicitante_nome: val("solicitante_nome"),
+        solicitante_email: val("solicitante_email"),
+        resumo
+      })
+    });
+
+    if (!resposta.ok) throw new Error(`Erro HTTP ${resposta.status}`);
+
+    const retorno = await resposta.json().catch(() => ({}));
+    if (retorno.success === false) throw new Error(retorno.message || "Falha no envio");
+
+    alert(retorno.message || "Solicitação enviada com sucesso!");
+  } catch (erro) {
+    console.error("Erro ao enviar solicitação:", erro);
+    alert("Não foi possível enviar a solicitação. Tente novamente em alguns instantes.");
+  } finally {
+    botaoEnviar.disabled = false;
+    botaoEnviar.textContent = textoOriginal;
+  }
 });
 </script>
 </body>
