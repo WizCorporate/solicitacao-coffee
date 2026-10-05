@@ -207,7 +207,7 @@ input[type="radio"] { accent-color: #F26716; }
 <section class="card">
   <div class="sec-head"><span class="sec-num">3</span><h2 class="sec-title">Estrutura do evento</h2></div>
   <div class="field">
-    <label>Precisa de tela de TV?</label>
+    <label>Deseja incluir uma mensagem de boas-vindas na TV da recepção? <span class="required">*</span></label>
     <div class="radio-group">
       <label class="radio-opt"><input type="radio" name="tv" value="Sim"> Sim</label>
       <label class="radio-opt"><input type="radio" name="tv" value="Não" checked> Não</label>
@@ -216,11 +216,11 @@ input[type="radio"] { accent-color: #F26716; }
 
   <div id="tv_cliente_box" class="conditional hidden">
     <div class="field">
-      <label for="cliente_nome">Nome do visitante <span class="required">*</span></label>
-      <input type="text" id="cliente_nome" placeholder="Ex.: João da Silva">
+      <label for="cliente_nome">Nome da empresa ou organização <span class="required">*</span></label>
+      <input type="text" id="cliente_nome" placeholder="Ex.: MAGALU">
     </div>
     <div class="field">
-      <label for="cliente_logo">Logo do visitante</label>
+      <label for="cliente_logo">Logo da empresa ou organização</label>
       <input type="file" id="cliente_logo" accept=".png,.jpg,.jpeg,.svg,image/png,image/jpeg,image/svg+xml">
       <div class="hint">Anexo opcional. Formatos aceitos: PNG, JPG, JPEG ou SVG (até 5 MB).</div>
     </div>
@@ -342,9 +342,9 @@ document.getElementById("enviar").addEventListener("click", async () => {
     `Sala / espaço reservado: ${radio("sala_reservada")}`,
     "",
     "ESTRUTURA DO EVENTO",
-    `Tela de TV: ${radio("tv")}`,
+    `Mensagem de boas-vindas na TV da recepção: ${radio("tv")}`,
     ...(radio("tv") === "Sim" ? [
-      `Nome do visitante: ${val("cliente_nome")}`
+      `Empresa ou organização: ${val("cliente_nome")}`
     ] : []),
     "",
     "INFORMAÇÕES ADICIONAIS",
